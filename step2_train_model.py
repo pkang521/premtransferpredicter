@@ -1,7 +1,4 @@
 # STEP 2: Train a linear regression and check how good it is.
-#
-# Run:  python step2_train_model.py
-# Makes: model.joblib, predictions.csv
 
 import joblib
 import numpy as np
@@ -12,15 +9,13 @@ from sklearn.metrics import r2_score
 df = pd.read_csv("player_seasons.csv")
 
 # ---------------------------------------------------------------
-# Choose the features (inputs) and the target (output)
+# Choose the features and target
 # ---------------------------------------------------------------
-# Market values are very skewed (most players are cheap, a few cost €100m+).
-# Taking the log makes the data much better behaved for linear regression,
-# and turns effects into percentages ("+20%") instead of fixed euro amounts.
+# Market values are very skewed (most players are cheap, a few cost €100m+)
+# Taking the log makes the data much better behaved for linear regression
 df["log_value"] = np.log(df["market_value"])
 
-# Value rises until the mid-20s, then falls. A straight line can't do that,
-# but adding age² lets the fitted curve bend.
+# Value rises until the mid-20s, then falls.
 df["age_squared"] = df["age"] ** 2
 
 # Turn position (text) into 0/1 columns the model can use.
@@ -34,9 +29,7 @@ target = "log_value"
 # ---------------------------------------------------------------
 # Split into training and test data BY SEASON
 # ---------------------------------------------------------------
-# We train on older seasons and test on the most recent one.
-# (A random split would put the same player's other seasons in both sets,
-#  which makes the model look better than it really is.)
+# Training on older seasons and test on the most recent one.
 last_season = df["season"].max()
 train = df[df["season"] < last_season]
 test = df[df["season"] == last_season]
@@ -52,7 +45,7 @@ model.fit(train[features], train[target])
 # Evaluate on the test season
 # ---------------------------------------------------------------
 test = test.copy()
-test["predicted_value"] = np.exp(model.predict(test[features]))   # undo the log
+test["predicted_value"] = np.exp(model.predict(test[features]))   # undos the log
 r2 = r2_score(test[target], np.log(test["predicted_value"]))
 
 # How far off are we, in %?
@@ -62,7 +55,7 @@ print(f"\nR² on the test season: {r2:.2f}")
 print(f"Median error: {test['error_pct'].median():.0%}")
 print("(R² = 1 would be perfect; 0 = no better than guessing the average)")
 
-# What did the model learn? exp(coef) - 1 = % change in value per unit of the feature
+#exp(coef) - 1 = % change in value per unit of the feature
 print("\nWhat each feature does to value:")
 for name, coef in zip(features, model.coef_):
     print(f"  {name:22s} {coef:+.4f}")
