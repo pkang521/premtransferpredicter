@@ -1,11 +1,5 @@
 # STEP 1: Turn the raw Transfermarkt CSVs into one clean table.
 #
-# Each row of the final table = one player in one Premier League season, with:
-#   - his stats that season (minutes, goals, assists)
-#   - his age and position
-#   - how good his club was that season
-#   - his market value at the end of that season  <- what we want to predict
-#
 # Run:  python step1_prepare_data.py
 # Makes: player_seasons.csv
 
