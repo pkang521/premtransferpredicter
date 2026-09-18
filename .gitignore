@@ -1,0 +1,17 @@
+# Data (too big for GitHub; see README for how to download it)
+data/
+
+# Files the scripts generate — anyone can recreate them by running the steps
+player_seasons.csv
+predictions.csv
+model.joblib
+
+# Python / environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Mac and editor clutter
+.DS_Store
+.vscode/
